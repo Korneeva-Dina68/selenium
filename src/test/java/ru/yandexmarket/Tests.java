@@ -3,14 +3,12 @@ package ru.yandexmarket;
 import io.qameta.allure.Feature;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import pages.CatalogPage;
 import pages.MainPageYandex;
 import pages.ResultSearchProducts;
 
 import static helpers.Properties.testsProperties;
-
 
 public class Tests extends BaseTest {
 
@@ -32,7 +30,7 @@ public class Tests extends BaseTest {
         rsp.filterWord(filter1);
         rsp.filterWord(filter2);
         rsp.checkQuantityOnFirstPage();
-//        rsp.checkAllPagesForComplianceWithFilter();
+        rsp.checkAllPagesForComplianceWithFilter();
         rsp.goFirstPage();
         rsp.searchInTheLine();
         rsp.checkingThatTheWordIsPresentOnThePage();

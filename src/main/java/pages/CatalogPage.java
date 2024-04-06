@@ -20,9 +20,9 @@ public class CatalogPage {
     protected WebDriverWait wait;
 
     /**
-     * @author Корнеева Дина
      * @param chromeDriver для предачи драйвера
-     * Конструктор
+     *                     Конструктор
+     * @author Корнеева Дина
      */
     public CatalogPage(WebDriver chromeDriver) {
         this.chromeDriver = chromeDriver;
@@ -30,10 +30,10 @@ public class CatalogPage {
     }
 
     /**
-     * @author Корнеева Дина
      * @param categoryLink принимает название категории
-     * @param subItems принимает название подкатегории
+     * @param subItems     принимает название подкатегории
      * Метод в каталоге наводит курсор на категорию и кликает на подкатегорию
+     * @author Корнеева Дина
      */
 
     @Step("В каталоге выбираем категорию: {categoryLink} и подкатегорию: {subItems} ")

@@ -26,9 +26,9 @@ public class MainPageYandex {
     protected String menuCatalog = "//div[@data-baobab-name='catalog']";
 
     /**
-     * @author Корнеева Дина
      * @param chromeDriver для предачи драйвера
      * Конструктор
+     * @author Корнеева Дина
      */
     public MainPageYandex(WebDriver chromeDriver) {
         this.chromeDriver = chromeDriver;
@@ -36,9 +36,9 @@ public class MainPageYandex {
     }
 
     /**
-     * @author Корнеева Дина
      * @param nameSite принимает название сайта
      * Метод сравнивает ожидаемое и актуальное название текущей страницы
+     * @author Корнеева Дина
      */
 
     @Step("Проверяем заголовок сайта {nameSite}")

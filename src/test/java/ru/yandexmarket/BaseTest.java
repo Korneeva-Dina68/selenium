@@ -26,10 +26,10 @@ public class BaseTest {
      */
     @BeforeEach
     public void before() {
-        System.setProperty("webdriver.chrome.driver",System.getenv("CHROME_DRIVER"));
+        System.setProperty("webdriver.chrome.driver", System.getenv("CHROME_DRIVER"));
 
         chromeDriver = new ChromeDriver();
-        wait = new WebDriverWait(chromeDriver,10);
+        wait = new WebDriverWait(chromeDriver, 10);
         chromeDriver.manage().window().maximize();
         chromeDriver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         chromeDriver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
@@ -41,7 +41,7 @@ public class BaseTest {
      * Здесь прописаны параметры, которые необходимо выполнить после каждого теста
      */
     @AfterEach
-    public void after(){
+    public void after() {
         chromeDriver.quit();
     }
 }

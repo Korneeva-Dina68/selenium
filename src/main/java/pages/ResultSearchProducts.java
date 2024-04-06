@@ -51,7 +51,7 @@ public class ResultSearchProducts {
      * @author Корнеева Дина
      * Элемент для ожидания загрузки
      */
-    protected String loading = "//div[@data-zone-name='SearchSerp']//span[@aria-label='Загрузка...']";
+    protected String loading = "//div[@data-apiary-widget-name='@marketfront/SerpStaticLoader']//div[@data-auto='preloader']";
     /**
      * @author Корнеева Дина
      * Элемент с названием продукта
@@ -62,11 +62,6 @@ public class ResultSearchProducts {
      * Элемент с ценой продукта
      */
     protected String productPrice = "//span[@data-auto='snippet-price-current']";
-    /**
-     * @author Корнеева Дина
-     * Строка для хранения url первой страницы результата поиска
-     */
-    protected String currentUrl;
     /**
      * @author Корнеева Дина
      * Строка для хранения названия первого продукта в списке
@@ -84,14 +79,14 @@ public class ResultSearchProducts {
     protected String listOfProducts = "//div[@data-apiary-widget-name='@light/Organic']";
 
     /**
-     * @author Корнеева Дина
      * @param chromeDriver для предачи драйвера
      * Конструктор
+     * @author Корнеева Дина
      */
     public ResultSearchProducts(WebDriver chromeDriver) {
         this.chromeDriver = chromeDriver;
         wait = new WebDriverWait(chromeDriver, 10);
-        this.searchField = chromeDriver.findElement(By.xpath("//input[@placeholder='Искать товары']"));
+        this.searchField = chromeDriver.findElement(By.xpath("//input[@id='header-search']"));
         this.titleResultSearch = chromeDriver.findElement(By.xpath("//h1[@data-auto='title']"));
         this.filterPriceMin = chromeDriver.findElement(By.xpath("//div[@data-auto='filter-range-glprice']//span[@data-auto='filter-range-min']//input"));
         this.filterPriceMax = chromeDriver.findElement(By.xpath("//div[@data-auto='filter-range-glprice']//span[@data-auto='filter-range-max']//input"));
@@ -99,9 +94,9 @@ public class ResultSearchProducts {
     }
 
     /**
-     * @author Корнеева Дина
      * @param title для передачи названия текущей страницы
      * Метод сравнивает ожидаемое и актуальное название текущей страницы
+     * @author Корнеева Дина
      */
     @Step("Проверяем название текущей страницы: {title}")
     public void checkRequiredPageHasOpened(String title) {
@@ -109,9 +104,9 @@ public class ResultSearchProducts {
     }
 
     /**
-     * @author Корнеева Дина
      * @param minPrice для передачи минимальной цены
      * Метод вводит минимальную цену в соответсвующую строку
+     * @author Корнеева Дина
      */
     @Step("Устанавливаем минимальную цену в фильтрах товара: {minPrice}")
     public void filterMinPrice(String minPrice) {
@@ -120,9 +115,9 @@ public class ResultSearchProducts {
     }
 
     /**
-     * @author Корнеева Дина
      * @param maxPrice для передачи максимальной цены
      * Метод вводит максимальную цену в соответсвующую строку
+     * @author Корнеева Дина
      */
     @Step("Устанавливаем максимальную цену в фильтрах товара: {maxPrice}")
     public void filterMaxPrice(String maxPrice) {
@@ -131,9 +126,9 @@ public class ResultSearchProducts {
     }
 
     /**
-     * @author Корнеева Дина
      * @param filter для передачи значения для фильтра
      * Метод устанавливает любое значение фильтра, переданное в параметрах
+     * @author Корнеева Дина
      */
     @Step("Устанавливаем фильтр: {filter}")
     public void filterWord(String filter) {
@@ -146,13 +141,13 @@ public class ResultSearchProducts {
      */
     @Step("Проверяем, что на первой странице больше 12 товаров и сохраняем ссылку на эту страницу")
     public void checkQuantityOnFirstPage() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(loading)));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(loading)));
         List<WebElement> searchResults = chromeDriver.findElements(By.xpath(productName));
         for (WebElement result : searchResults) {
             System.out.println(result.getText());
         }
         Assertions.assertTrue(searchResults.size() > 12, "На первой странице отображается менее или ровно 12 элементов товаров");
-        currentUrl = chromeDriver.getCurrentUrl();
     }
 
     /**
@@ -172,6 +167,7 @@ public class ResultSearchProducts {
                 break;
             } else {
                 wait.until(ExpectedConditions.elementToBeClickable(chromeDriver.findElement(By.xpath(buttonShowMore)))).click();
+                wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//button[@data-auto='pager-more']//span[@data-auto='spinner']")));
             }
         }
 
@@ -195,14 +191,15 @@ public class ResultSearchProducts {
      * @author Корнеева Дина
      * Метод переходит на первую страницу с результатами поиска и сохраняет в переменную название первого товара
      */
-    @Step("Переходим на первую страницу поиска и сохраняем название первого товара")
+    @Step("Возвращаемся на первую страницу поиска и сохраняем название первого товара")
     public void goFirstPage() {
-        chromeDriver.get(currentUrl);
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(loading)));
+        JavascriptExecutor js = (JavascriptExecutor) chromeDriver;
+        js.executeScript("window.scrollTo(0, 0)");
         List<WebElement> listResult = chromeDriver.findElements(By.xpath(productName));
         firstProduct = listResult.get(0).getText();
 
     }
+
     /**
      * @author Корнеева Дина
      * Метод вводит в поисковую строку название сохраненного первого товара и нажимает кнопку Поиск
@@ -220,7 +217,6 @@ public class ResultSearchProducts {
      */
     @Step("Проверяем, что в результатах поиска присутствует название первого товара")
     public void checkingThatTheWordIsPresentOnThePage() {
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(loading)));
         List<WebElement> listResult = chromeDriver.findElements(By.xpath(productName));
         Assertions.assertTrue(listResult.stream()
                 .map(WebElement::getText)
